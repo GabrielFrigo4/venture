@@ -13,16 +13,6 @@
 
 ---
 
-## 🎯 Grandes Épicos do Hub
+## 🎯 Backlog & Tarefas
 
-### 1. ⚡ OptiLaser: Otimização VRPTW & Copiloto
-
-- [ ] **Heurísticas Avançadas:** Incorporar heurísticas de inserção e busca local para instâncias com mais de 100 clientes.
-- [ ] **Resiliência do Banco Embutido:** Afinar WAL Mode e backups assíncronos no PocketBase / SQLite.
-- [ ] **Interface & Copiloto:** Refinar dashboards de controle com monitoramento em tempo real de rotas e disparos.
-
-### 2. 🏛️ Infraestrutura de Deploy & Orquestração Soberana
-
-- [ ] **Empacotamento de Binário Único:** Garantir build estático e hermético em Go para distribuição em FreeBSD e Linux.
-- [ ] **Contêineres Podman Rootless:** Padronizar subida de serviços em nós Linux e Jails FreeBSD com zero privilégios de root.
-- [ ] **SSL/TLS Automático:** Validar emissão autônoma de certificados via Let's Encrypt nativo do PocketBase.
+_Nenhuma tarefa pendente no momento._
