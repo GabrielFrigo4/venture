@@ -34,22 +34,20 @@ flowchart TD
 
 ## 🧩 Os Componentes do Venture
 
-| Componente                    | Foco & Responsabilidade                                                               | Tecnologias Centrais                    | Repositório Remoto                                                      |
-| :---------------------------- | :------------------------------------------------------------------------------------ | :-------------------------------------- | :---------------------------------------------------------------------- |
-| [**`OptiLaser`**](OptiLaser/) | Roteirização ótima com janelas de tempo, controle de disparos e dashboard operacional | Go, Google OR-Tools, PocketBase, Podman | [`GabrielFrigo4/optilaser`](https://github.com/GabrielFrigo4/optilaser) |
+| Componente                    | Foco & Responsabilidade                                                               | Tecnologias Centrais                    | Status de Acesso                                                   |
+| :---------------------------- | :------------------------------------------------------------------------------------ | :-------------------------------------- | :----------------------------------------------------------------- |
+| [**`OptiLaser`**](OptiLaser/) | Roteirização ótima com janelas de tempo, controle de disparos e dashboard operacional | Go, Google OR-Tools, PocketBase, Podman | 🔒 Privado (clonável via `make clone` com credenciais SSH válidas) |
 
 ---
 
 ## 🚀 Como Obter e Operar
 
 ```sh
-# Clonagem recursiva
-git clone --recursive "https://github.com/GabrielFrigo4/venture.git"
-cd venture
-
-# Ou clonagem simples seguida de bootstrap
+# Clonar o Hub
 git clone "https://github.com/GabrielFrigo4/venture.git"
 cd venture
+
+# Inicializar o ecossistema (clona o repositório privado OptiLaser via SSH se autorizado)
 make clone
 ```
 
