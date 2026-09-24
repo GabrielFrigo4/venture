@@ -1,3 +1,4 @@
 [submodule "OptiLaser"]
 	path = OptiLaser
 	url = https://github.com/GabrielFrigo4/optilaser.git
+	branch = main

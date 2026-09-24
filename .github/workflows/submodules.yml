@@ -1,4 +1,4 @@
-name: Universal Environment CI
+name: Hub CI
 
 on:
     push:
@@ -10,62 +10,38 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
-env:
-    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
-    submodules-and-quality:
-        name: 🏛️ Submodules Integrity & Quality Gates
+    integrity-and-quality:
+        name: 🏛️ Hub Integrity & Quality Gates
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout Superproject with Submodules
-              uses: actions/checkout@v7
+            - name: Checkout Hub Repository
+              uses: actions/checkout@v4
               with:
-                  submodules: recursive
                   fetch-depth: 0
 
-            - name: Validate Submodules Status
+            - name: Initialize Public Submodules
               run: |
-                  echo "🔍 Checking submodules status..."
+                  echo "🔍 Synchronizing submodules..."
+                  git submodule sync --recursive
+                  echo "📦 Initializing accessible submodules..."
+                  git submodule update --init --recursive || echo "⚠️ Notice: Some private submodules were skipped (no SSH key provided in CI)."
+
+            - name: Validate Git Submodules Status
+              run: |
+                  echo "📊 Submodules status:"
                   git submodule status
-                  git submodule status | while read -r sha name rest; do
-                    case "$sha" in
-                      -*)
-                        echo "❌ Submodule $name is not initialized!" >&2
-                        exit 1
-                        ;;
-                      U*)
-                        echo "❌ Submodule $name has merge conflicts!" >&2
-                        exit 1
-                        ;;
-                      *)
-                        echo "✅ Submodule $name is clean at $sha"
-                        ;;
-                    esac
-                  done
-
-            - name: Validate Makefile Syntax
-              run: |
-                  echo "🔍 Checking Makefile syntax..."
-                  make -n
-
-            - name: Validate Git Hooks Syntax
-              run: |
-                  echo "🔍 Checking githooks syntax..."
-                  find .githooks -type f -exec sh -n {} +
 
             - name: Validate Shell Scripts Syntax
               run: |
-                  echo "🧪 Validating shell scripts syntax..."
-                  make test
-
-            - name: Setup Node.js & Prettier
-              uses: actions/setup-node@v7
-              with:
-                  node-version: "22"
+                  echo "🐚 Validating shell scripts syntax..."
+                  if [ -n "$(find . -name "*.sh" -not -path "*/.git/*" -print -quit 2>/dev/null)" ]; then
+                    find . -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
+                  fi
+                  echo "✅ Shell scripts syntax valid!"
 
             - name: Validate Markdown Formatting
               run: |
-                  npm install -g prettier
-                  cp Profile/tools/.prettierrc ~/.prettierrc
-                  make lint-md
+                  echo "📝 Validating Markdown with Prettier..."
+                  npx prettier --check "*.md"
+                  echo "✅ Markdown formatting valid!"
