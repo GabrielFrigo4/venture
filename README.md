@@ -34,9 +34,9 @@ flowchart TD
 
 ## 🧩 Os Componentes do Venture
 
-| Componente                    | Foco & Responsabilidade                                                               | Tecnologias Centrais                    | Status de Acesso                                                   |
-| :---------------------------- | :------------------------------------------------------------------------------------ | :-------------------------------------- | :----------------------------------------------------------------- |
-| [**`OptiLaser`**](OptiLaser/) | Roteirização ótima com janelas de tempo, controle de disparos e dashboard operacional | Go, Google OR-Tools, PocketBase, Podman | 🔒 Privado (clonável via `make clone` com credenciais SSH válidas) |
+| Componente      | Foco & Responsabilidade                                                               | Tecnologias Centrais                    | Status de Acesso                                                   |
+| :-------------- | :------------------------------------------------------------------------------------ | :-------------------------------------- | :----------------------------------------------------------------- |
+| **`OptiLaser`** | Roteirização ótima com janelas de tempo, controle de disparos e dashboard operacional | Go, Google OR-Tools, PocketBase, Podman | 🔒 Privado (clonável via `make clone` com credenciais SSH válidas) |
 
 ---
 
