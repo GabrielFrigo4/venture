@@ -63,5 +63,5 @@ make test      # Executa sanity checks locais
 
 ## 📜 Governança e Princípios
 
-- **Princípios de Engenharia:** Consulte [PRINCIPLES.md](PRINCIPLES.md) para os 18 princípios canônicos aplicados.
+- **Princípios de Engenharia:** Consulte [PRINCIPLES.md](PRINCIPLES.md) para os 22 princípios canônicos aplicados.
 - **AI Agent Briefing:** Instruções de operação para agentes autônomos em [AGENTS.md](AGENTS.md).
