@@ -7,15 +7,16 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Venture Hub Orchestrator
 # ----------------------------------------------------------------
 
-.PHONY: help clone pull status test audit format lint-md hooks ci
+.PHONY: help clone pull status test audit format prettier lint-md hooks ci
 
 ### ================================
 ### HELP & DOCUMENTATION
 ### ================================
 help:
-	cmd() { printf "    \033[36mmake %-22s\033[0m %s\n" "$$1" "$$2"; }; \
-	sec() { printf "\n  \033[1;33m%s\033[0m\n" "$$1"; }; \
-	printf "\n  \033[1;37mVenture Hub — Orquestrador Soberano de Produtos & Startups\033[0m\n"; \
+	_e=$$'\e'; \
+	cmd() { printf "    $${_e}[36mmake %-22s$${_e}[0m %s\n" "$$1" "$$2"; }; \
+	sec() { printf "\n  $${_e}[1;33m%s$${_e}[0m\n" "$$1"; }; \
+	printf "\n  $${_e}[1;37mVenture Hub — Orquestrador Soberano de Produtos & Startups$${_e}[0m\n"; \
 	printf "  ===============================================================\n"; \
 	sec "Sincronização & Repositórios:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona OptiLaser via SSH"; \
@@ -26,9 +27,11 @@ help:
 	sec "Qualidade & Testes:"; \
 	cmd "test"           "Valida integridade e sintaxe de shell scripts"; \
 	cmd "format"         "Formata documentações Markdown com Prettier"; \
+	cmd "prettier"       "Formata documentações Markdown com Prettier"; \
 	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
 	cmd "ci"             "Executa pipeline local completa de validação"; \
 	echo ""
+
 
 ### ================================
 ### REPOSITORIES ORCHESTRATION
@@ -84,6 +87,8 @@ format:
 		find . -name "*.md" -not -path "*/.git/*" -not -path "*/OptiLaser/*" -exec prettier --write {} +; \
 		echo "✅ Markdown formatado!"; \
 	fi
+
+prettier: format
 
 lint-md:
 	echo "🔍 Validando formatação de Markdown..."

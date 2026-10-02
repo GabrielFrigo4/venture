@@ -274,11 +274,11 @@ Para garantir longevidade, idempotência e excelência técnica, toda contribui�
 
 ### 10. Orçamento de Linhas (Regra 8 - 16 - 128 - 256)
 
-- **Piso Rígido (Erro Fatal < 8 linhas):** Nenhum script isolado deve possuir menos de 8 linhas úteis. Scripts de 1 a 7 linhas são terminantemente proibidos como nano-scripts órfãos ou vazios, gerando erro fatal e bloqueio de commit no pre-commit e CI (`sys.exit(1)`).
+- **Piso Rígido (< 8 linhas):** Nenhum script isolado deve possuir menos de 8 linhas úteis. Scripts de 1 a 7 linhas são bloqueados no pre-commit e CI (`sys.exit(1)`).
 - **Averiguação Inferior (Aviso <= 16 linhas):** Scripts com 8 a 16 linhas são sinalizados pelos auditores estáticos como candidatos à averiguação e consolidação temática em seus respectivos módulos, evitando fragmentação excessiva.
 - **Faixa Canônica (Sweet Spot 17 a 128 linhas):** Faixa de equilíbrio arquitetural ideal entre granularidade atômica, legibilidade UNIX e manutenibilidade Clean Code.
 - **Averiguação Superior (Aviso 129 a 255 linhas):** Scripts com 129 a 255 linhas são sinalizados pelos auditores estáticos como candidatos à averiguação e modularização.
-- **Teto Rígido (Erro Fatal > 256 linhas):** Nenhum script deve ultrapassar 256 linhas úteis (monólito inaceitável), gerando erro fatal e bloqueio de commit no pre-commit e CI (`sys.exit(1)`), salvo exceções técnicas raras devidamente documentadas na Whitelist dos auditores com justificativa explícita.
+- **Teto Rígido (> 256 linhas):** Nenhum script deve ultrapassar 256 linhas úteis, gerando bloqueio no pre-commit e CI (`sys.exit(1)`), salvo exceções técnicas documentadas na Whitelist dos auditores com justificativa explícita.
 
 ### 11. Execução pelo Shell Ativo (_Active Shell Invocation_)
 
