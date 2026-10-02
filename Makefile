@@ -36,17 +36,28 @@ help:
 ### ================================
 ### REPOSITORIES ORCHESTRATION
 ### ================================
+PRIVATE_REPOS := \
+	"OptiLaser:GabrielFrigo4/optilaser"
+
 clone:
 	echo "📦 Inicializando submódulos públicos..."
-	git submodule update --init --recursive 2> "/dev/null" || true
-	echo "🔐 Tentando clonar o OptiLaser (repositório privado via SSH)..."
-	if [ -e "OptiLaser/.git" ]; then \
-		echo "  ℹ️  OptiLaser já clonado."; \
-	elif git clone "git@github.com:GabrielFrigo4/optilaser.git" OptiLaser 2> "/dev/null"; then \
-		echo "  ✅ OptiLaser clonado com sucesso!"; \
-	else \
-		echo "  ⚠️  OptiLaser: clone via SSH falhou (configure chave SSH com acesso a GabrielFrigo4/optilaser)."; \
-	fi
+	git submodule update --init --recursive
+	echo "✅ Submódulos públicos inicializados!\n"
+	echo "🔐 Verificando repositórios privados..."
+	for entry in $(PRIVATE_REPOS); do \
+		dir=$${entry%%:*}; \
+		repo=$${entry##*:}; \
+		if [ -e "$$dir/.git" ]; then \
+			echo "  ℹ️  $$dir já clonado."; \
+		elif git clone "git@github.com:$$repo.git" "$$dir" 2>/dev/null; then \
+			echo "  ✅ $$dir clonado com sucesso via SSH!"; \
+		elif gh repo clone "$$repo" "$$dir" 2>/dev/null; then \
+			echo "  ✅ $$dir clonado com sucesso via gh CLI!"; \
+		else \
+			echo "  ⚠️  $$dir: clone falhou (verifique SSH ou login no gh)."; \
+		fi; \
+	done
+	echo ""
 	echo "🎉 Venture pronto!"
 
 pull:
