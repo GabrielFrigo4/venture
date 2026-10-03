@@ -7,7 +7,9 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Venture Hub Orchestrator
 # ----------------------------------------------------------------
 
-.PHONY: help clone pull status test audit format prettier lint-md hooks ci
+.PHONY: help clone pull status test audit format prettier lint-md hooks ci main
+
+REPOS = OptiLaser
 
 ### ================================
 ### HELP & DOCUMENTATION
@@ -20,6 +22,7 @@ help:
 	printf "  ===============================================================\n"; \
 	sec "Sincronização & Repositórios:"; \
 	cmd "clone"          "Inicializa submódulos públicos e clona OptiLaser via SSH"; \
+	cmd "main"           "Alterna submódulos e repositórios clonados para a branch main"; \
 	cmd "pull"           "Atualiza repositórios de venture com o GitHub"; \
 	sec "Diagnóstico & Status:"; \
 	cmd "status"         "Exibe status Git resumido dos produtos"; \
@@ -31,7 +34,6 @@ help:
 	cmd "lint-md"        "Valida formatação de Markdown sem alterar arquivos"; \
 	cmd "ci"             "Executa pipeline local completa de validação"; \
 	echo ""
-
 
 ### ================================
 ### REPOSITORIES ORCHESTRATION
@@ -58,25 +60,43 @@ clone:
 		fi; \
 	done
 	echo ""
+	$(MAKE) main
 	echo "🎉 Venture pronto!"
 
-pull:
+main:
+	echo "🌿 Alternando ecossistema para a branch main..."
+	git submodule foreach --quiet --recursive 'git checkout main 2>/dev/null || git switch main 2>/dev/null || true' 2>/dev/null || true
+	for r in $(REPOS); do \
+		if [ -e "$$r/.git" ]; then \
+			echo "  🌿 $$r -> main"; \
+			git -C "$$r" checkout main 2> "/dev/null" || git -C "$$r" switch main 2> "/dev/null" || echo "  ⚠️  $$r: falha ao alternar para main."; \
+		else \
+			echo "  ⏭️  $$r: não clonado, pulando."; \
+		fi; \
+	done
+	echo "✅ Repositórios ativos configurados na branch main!\n"
+
+pull: main
 	echo "🔄 Sincronizando submódulos públicos..."
 	git submodule update --remote --merge 2> "/dev/null" || true
-	if [ -e "OptiLaser/.git" ]; then \
-		echo "⬇️  Pulling OptiLaser..."; \
-		git -C OptiLaser pull --ff-only 2> "/dev/null" || git -C OptiLaser pull || echo "⚠️  OptiLaser: pull falhou."; \
-	fi
+	for r in $(REPOS); do \
+		if [ -e "$$r/.git" ]; then \
+			echo "⬇️  Pulling $$r..."; \
+			git -C "$$r" pull --ff-only 2> "/dev/null" || git -C "$$r" pull || echo "⚠️  $$r: pull falhou."; \
+		fi; \
+	done
 	echo "✅ Sincronização concluída!"
 
 status:
 	echo "=== 🚀 Venture Products ==="
-	if [ -e "OptiLaser/.git" ]; then \
-		echo "[$$(git -C OptiLaser branch --show-current 2> "/dev/null" || echo "detached")] OptiLaser:"; \
-		git -C OptiLaser status -s; \
-	else \
-		echo "[não clonado] OptiLaser (repositório privado)"; \
-	fi
+	for r in $(REPOS); do \
+		if [ -e "$$r/.git" ]; then \
+			echo "[$$(git -C "$$r" branch --show-current 2> "/dev/null" || echo "detached")] $$r:"; \
+			git -C "$$r" status -s; \
+		else \
+			echo "[não clonado] $$r (repositório privado)"; \
+		fi; \
+	done
 
 ### ================================
 ### QUALITY GATES & AUDIT
@@ -84,7 +104,9 @@ status:
 hooks:
 	chmod 0755 .githooks/* 2> "/dev/null" || true
 	git config core.hooksPath .githooks 2> "/dev/null" || true
-	[ -e "OptiLaser/.git" ] && git -C OptiLaser config core.hooksPath .githooks 2> "/dev/null" || true
+	for r in $(REPOS); do \
+		[ -e "$$r/.git" ] && git -C "$$r" config core.hooksPath .githooks 2> "/dev/null" || true; \
+	done
 	echo "✅ Hooks configurados com sucesso em .githooks!"
 
 test:
