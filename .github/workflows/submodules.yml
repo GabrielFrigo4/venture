@@ -40,8 +40,8 @@ jobs:
                   fi
                   echo "✅ Shell scripts syntax valid!"
 
-            - name: Validate Markdown Formatting
+            - name: Validate Formatting (Prettier)
               run: |
-                  echo "📝 Validating Markdown with Prettier..."
-                  npx prettier --check "*.md"
-                  echo "✅ Markdown formatting valid!"
+                  echo "🎨 Validating formatting with Prettier..."
+                  make lint-format
+                  echo "✅ Formatting 100% valid!"
