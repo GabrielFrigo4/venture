@@ -35,8 +35,11 @@ jobs:
             - name: Validate Shell Scripts Syntax
               run: |
                   echo "🐚 Validating shell scripts syntax..."
-                  if [ -n "$(find . -name "*.sh" -not -path "*/.git/*" -print -quit 2>/dev/null)" ]; then
-                    find . -name "*.sh" -not -path "*/.git/*" -exec sh -n {} +
+                  if [ -n "$(git ls-files '*.sh')" ]; then
+                    git ls-files '*.sh' | xargs -r sh -n
+                  fi
+                  if [ -d .githooks ]; then
+                    find .githooks -type f -exec sh -n {} +
                   fi
                   echo "✅ Shell scripts syntax valid!"
 

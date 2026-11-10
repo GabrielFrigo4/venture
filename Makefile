@@ -7,7 +7,7 @@ MAKEFLAGS += --no-print-directory -s
 # Makefile: Venture Hub Orchestrator
 # ----------------------------------------------------------------
 
-.PHONY: help clone pull status test audit format prettier lint-format hooks ci main clean
+.PHONY: help clone pull upgit status test audit format prettier lint-format hooks ci main clean
 
 REPOS = OptiLaser
 
@@ -24,6 +24,7 @@ help:
 	cmd "clone"          "Inicializa submódulos públicos e clona OptiLaser via SSH"; \
 	cmd "main"           "Alterna submódulos e repositórios clonados para a branch main"; \
 	cmd "pull"           "Atualiza repositórios de venture com o GitHub"; \
+	cmd "upgit"          "Atualiza todos os repositórios Git encontrados recursivamente"; \
 	sec "Diagnóstico & Status:"; \
 	cmd "status"         "Exibe status Git resumido dos produtos"; \
 	cmd "hooks"          "Configura e aplica permissões canônicas em .githooks"; \
@@ -88,6 +89,18 @@ pull: main
 		fi; \
 	done
 	echo "✅ Sincronização concluída!"
+
+upgit:
+	echo "🔄 Atualizando repositórios Git..."
+	find . \( -type d -name ".git" -print -prune \) -o \( -type f -name ".git" -print \) 2> "/dev/null" | awk '{ n=split($$0, a, "/"); print n, $$0 }' | sort -n -k1,1 | cut -d' ' -f2- | while read -r g; do \
+		d="$$(dirname "$$g")"; \
+		echo "# ----------------------------------------------------------------"; \
+		echo "# $$d"; \
+		echo "# ----------------------------------------------------------------"; \
+		git -C "$$d" pull --ff-only 2> "/dev/null" || git -C "$$d" pull || echo "⚠️  Falha ao atualizar $$d"; \
+		echo ""; \
+	done
+	echo "✅ Repositórios Git atualizados!"
 
 status:
 	echo "=== 🚀 Venture Products ==="
@@ -168,7 +181,7 @@ clean:
 	echo "🧹 Limpando artefatos, caches e ambientes virtuais no Venture..."
 	for r in $(REPOS); do \
 		if [ -e "$$r/Makefile" ]; then \
-			$(MAKE) -C "$$r" clean 2> "/dev/null" || true; \
+			(cd "$$r" && $(MAKE) clean) 2> "/dev/null" || true; \
 		fi; \
 	done
 	rm -rf .venv
