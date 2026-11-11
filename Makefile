@@ -54,9 +54,9 @@ clone:
 		repo=$${entry##*:}; \
 		if [ -e "$$dir/.git" ]; then \
 			echo "  ℹ️  $$dir já clonado."; \
-		elif git clone "git@github.com:$$repo.git" "$$dir" 2>/dev/null; then \
+		elif git clone "git@github.com:$$repo.git" "$$dir" 2> "/dev/null"; then \
 			echo "  ✅ $$dir clonado com sucesso via SSH!"; \
-		elif gh repo clone "$$repo" "$$dir" 2>/dev/null; then \
+		elif gh repo clone "$$repo" "$$dir" 2> "/dev/null"; then \
 			echo "  ✅ $$dir clonado com sucesso via gh CLI!"; \
 		else \
 			echo "  ⚠️  $$dir: clone falhou (verifique SSH ou login no gh)."; \
@@ -68,7 +68,7 @@ clone:
 
 main:
 	echo "🌿 Alternando ecossistema para a branch main..."
-	git submodule foreach --quiet --recursive 'git checkout main 2>/dev/null || git switch main 2>/dev/null || true' 2>/dev/null || true
+	git submodule foreach --quiet --recursive 'git checkout main 2> "/dev/null" || git switch main 2> "/dev/null" || true' 2> "/dev/null" || true
 	for r in $(REPOS); do \
 		if [ -e "$$r/.git" ]; then \
 			echo "  🌿 $$r -> main"; \

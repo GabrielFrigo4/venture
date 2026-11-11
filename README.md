@@ -42,22 +42,26 @@ flowchart TD
 
 ## 🚀 Como Obter e Operar
 
+Clonagem do Hub e navegação:
+
 ```sh
-# Clonar o Hub
 git clone "https://github.com/GabrielFrigo4/venture.git"
 cd venture
+```
 
-# Inicializar o ecossistema (clona o repositório privado OptiLaser via SSH se autorizado)
+Inicialização do ecossistema (clona o repositório privado OptiLaser via SSH se autorizado):
+
+```sh
 make clone
 ```
 
 ### Operações com o Makefile
 
-```sh
-make status    # Verifica estado de sincronização dos submódulos
-make pull      # Atualiza com as branches principais remotas
-make test      # Executa sanity checks locais
-```
+| Comando       | Descrição                                       |
+| :------------ | :---------------------------------------------- |
+| `make status` | Verifica estado de sincronização dos submódulos |
+| `make pull`   | Atualiza com as branches principais remotas     |
+| `make test`   | Executa validações e testes de integridade      |
 
 ---
 
